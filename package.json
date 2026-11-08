@@ -1,0 +1,6 @@
+{
+  "name": "maple-farm-atlas",
+  "private": true,
+  "type": "module",
+  "scripts": {"test": "node --test tests/core.test.mjs", "preview": "python -m http.server 4173 --directory site"}
+}
