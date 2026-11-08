@@ -1,0 +1,14 @@
+{
+  "name": "oraclemscw-api",
+  "main": "worker.js",
+  "compatibility_date": "2026-11-08",
+  "vars": {
+    "ALLOWED_ORIGINS": "https://henriqueld.github.io,http://localhost:4173,http://127.0.0.1:4173",
+    "OPENAI_MODEL": ""
+  },
+  "ratelimits": [{
+    "name": "ROUTE_LIMITER",
+    "namespace_id": "1001",
+    "simple": {"limit": 5, "period": 60}
+  }]
+}
