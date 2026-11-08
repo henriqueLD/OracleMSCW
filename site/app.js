@@ -60,7 +60,7 @@ async function showMap(candidate,index) {
     image.src=OSMS+'data/maps/'+hash+'.webp'; image.alt=`Mapa real de ${candidate.map.name}, com spawns de ${currentMonster.name}`;
     await image.decode(); if(mine!==revision)return;
     $('empty-map').hidden=true;$('map-stage').hidden=false;
-    drawOverlay();$('analyze').disabled=false;$('fit-map').disabled=false;$('original-link').disabled=false;
+    fitMap();drawOverlay();$('analyze').disabled=false;$('fit-map').disabled=false;$('original-link').disabled=false;
     status('Mapa carregado. Gere a rota para avaliar plataformas e deslocamento.');
   } catch {if(mine===revision) {status('A imagem não carregou. Tente outro mapa ou confira a conexão.');$('empty-map').replaceChildren(node('p','Não foi possível carregar a imagem deste mapa.'));}}
 }
@@ -76,7 +76,15 @@ function drawOverlay(){
     const p=points[0];overlay.append(svg('circle',{cx:p.x,cy:p.y,r:13*scale,fill:'#d9ee9c',stroke:'#111b18','stroke-width':2*scale}));const t=svg('text',{x:p.x,y:p.y+4.5*scale,'text-anchor':'middle',fill:'#152b24','font-size':13*scale,'font-weight':700,'font-family':'sans-serif'});t.textContent=i+1;overlay.append(t);
   });
 }
-$('fit-map').onclick=()=>{$('map-stage').style.width='100%';$('map-scroller').scrollTo(0,0);};
+function fitMap(){
+  const image=$('map-image'), stage=$('map-stage'), viewport=$('map-scroller');
+  if(stage.hidden || !image.naturalWidth || !image.naturalHeight)return;
+  const scale=Math.min(viewport.clientWidth/image.naturalWidth,viewport.clientHeight/image.naturalHeight);
+  stage.style.width=`${image.naturalWidth*scale}px`;
+  stage.style.height=`${image.naturalHeight*scale}px`;
+}
+new ResizeObserver(fitMap).observe($('map-scroller'));
+$('fit-map').onclick=fitMap;
 $('original-link').onclick=()=>window.open($('map-image').src,'_blank','noopener,noreferrer');
 $('settings-button').onclick=()=>{const hidden=!$('settings').hidden;$('settings').hidden=hidden;$('settings-button').setAttribute('aria-expanded',String(!hidden));};
 $('save-api').onclick=()=>{
